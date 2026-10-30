@@ -1,0 +1,4 @@
+  code     lc number        customer             issuing bank         amount         ceiling        drawn          latest shipment on  expiry on   days to expiry  present by  status
+  -------  ---------------  -------------------  -------------------  -------------  -------------  -------------  ------------------  ----------  --------------  ----------  ------
+  LC-7002  DXB-ILC-25-0533  Gulf Fine Foods LLC  Emirates NBD, Dubai  USD 30,000.00  USD 30,000.00  USD 37,340.00  2026-11-06          2026-11-07               8              open  
+  LC-7001  DXB-ILC-25-0418  Gulf Fine Foods LLC  Emirates NBD, Dubai  USD 46,000.00  USD 48,300.00  USD 46,740.00  2026-10-15          2026-11-13              14  2026-11-02  open  

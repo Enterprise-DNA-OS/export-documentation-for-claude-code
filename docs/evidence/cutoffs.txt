@@ -1,0 +1,7 @@
+  code    customer  mode  vessel               cutoff            days  export entry               outstanding          
+  ------  --------  ----  -------------------  ----------------  ----  -------------------------  ---------------------
+  S-2044  SHOH      sea   COSCO Auckland 051S  2026-10-31 10:00     1  NZE-2611-41520             COO                  
+  S-2041  KANTO     sea   ONE Matariki 096N    2026-10-31 16:00     1  lodge by 2026-10-29 16:00  EHC                  
+  S-2042  LION      air   SQ286                2026-11-04 08:00     5  lodge by 2026-11-03 23:00  PL                   
+  S-2040  KANTO     sea   ONE Tasman 214N      2026-11-05 16:00     6  lodge by 2026-11-03 16:00  EHC, PL              
+  S-2043  GULF      sea   CMA CGM Orion 0FE8   2026-11-06 16:00     7  lodge by 2026-11-04 16:00  CI, COO, EHC, INS, PL

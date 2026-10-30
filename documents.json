@@ -1,11 +1,48 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "commercial-invoice",
+    "title": "Commercial invoice",
+    "for_each": "select sh.id, sh.code || ' ' || c.name as label from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.customers c on c.id = o.customer_id where sh.status in ('booked', 'shipped') order by sh.code",
+    "file": "label",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      { "title": "Invoice", "layout": "record", "sql": "select coalesce((select ref_no from trade.documents d where d.shipment_id = sh.id and d.doc_type = 'CI' order by d.created_at desc limit 1), 'INV-' || replace(sh.code, 'S-', '')) invoice_number, current_date invoice_date, st.business_name exporter, st.business_address exporter_address, st.business_number exporter_number, c.name consignee, c.address consignee_address, c.tax_id consignee_tax_id, o.po_ref buyer_order, o.incoterm || coalesce(' ' || o.named_place, '') || ' (Incoterms 2020)' delivery_terms, c.payment_terms, sh.vessel, sh.port_load || ' to ' || sh.port_discharge route, sh.container_no container, case when st.jurisdiction = 'AU' then 'Australia' else 'New Zealand' end country_of_origin from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.customers c on c.id = o.customer_id cross join trade.settings st where sh.id = $1" },
+      { "title": "Goods", "sql": "select p.name description, coalesce(p.hs_code, 'MISSING') hs_code, l.qty quantity, p.unit, o.currency, l.unit_price_cents, round(l.qty * l.unit_price_cents)::bigint line_cents from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.order_lines l on l.order_id = o.id join trade.products p on p.id = l.product_id where sh.id = $1 order by l.created_at, p.code" },
+      { "title": "Totals", "layout": "record", "sql": "select ov.currency, ov.goods_cents, case when ov.invoice_cents > ov.goods_cents then o.freight_cents else 0 end freight_cents, case when o.incoterm in ('CIF', 'CIP') then o.insurance_cents else 0 end insurance_cents, ov.invoice_cents total_cents, ov.packages, ov.net_kg, ov.gross_kg from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.order_value ov on ov.id = o.id where sh.id = $1" },
+      { "title": "Origin statement", "note": "Printed when the order claims a trade agreement and the exporter certifies origin. The certifier signs below.", "layout": "record", "sql": "select a.code agreement, a.declaration statement, coalesce(st.certifier_name, 'NAME REQUIRED') certifier, coalesce(st.certifier_phone, 'PHONE REQUIRED') certifier_phone, coalesce(st.certifier_email, 'EMAIL REQUIRED') certifier_email, '' signature from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.agreements a on a.code = o.claim_agreement and a.self_certified cross join trade.settings st where sh.id = $1" }
+    ]
+  },
+  {
+    "name": "packing-list",
+    "title": "Packing list",
+    "for_each": "select sh.id, sh.code || ' ' || c.name as label from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.customers c on c.id = o.customer_id where sh.status in ('booked', 'shipped') order by sh.code",
+    "file": "label",
+    "sections": [
+      { "title": "Shipment", "layout": "record", "sql": "select sh.code shipment, o.po_ref buyer_order, st.business_name shipper, c.name consignee, c.address consignee_address, sh.vessel, sh.booking_ref, sh.port_load, sh.port_discharge, sh.container_no container, sh.seal_no seal, sh.etd from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.customers c on c.id = o.customer_id cross join trade.settings st where sh.id = $1" },
+      { "title": "Packages", "sql": "select p.code, p.name description, p.hs_code, l.qty packages, p.unit, round(l.qty * p.net_kg, 1) net_kg, round(l.qty * p.gross_kg, 1) gross_kg, round(l.qty * p.cbm, 2) cbm, coalesce(p.storage, '') storage from trade.shipments sh join trade.order_lines l on l.order_id = sh.order_id join trade.products p on p.id = l.product_id where sh.id = $1 order by l.created_at, p.code" },
+      { "title": "Totals", "layout": "record", "sql": "select ov.packages, ov.net_kg, ov.gross_kg, ov.cbm from trade.shipments sh join trade.order_value ov on ov.id = sh.order_id where sh.id = $1" }
+    ]
+  },
+  {
+    "name": "certification-of-origin",
+    "title": "Certification of origin",
+    "for_each": "select sh.id, sh.code || ' ' || o.claim_agreement as label from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.agreements a on a.code = o.claim_agreement where a.self_certified and sh.status in ('booked', 'shipped') order by sh.code",
+    "file": "label",
+    "sections": [
+      { "title": "Certifier", "note": "The certifier is the exporter. Name, address, telephone and email are part of the minimum information the agreement asks for.", "layout": "record", "sql": "select 'Exporter' certifier_role, coalesce(st.certifier_name, 'NAME REQUIRED') certifier, coalesce(st.business_address, 'ADDRESS REQUIRED') address, coalesce(st.certifier_phone, 'PHONE REQUIRED') telephone, coalesce(st.certifier_email, 'EMAIL REQUIRED') email from trade.settings st where $1::uuid is not null" },
+      { "title": "Exporter, producer and importer", "layout": "record", "sql": "select st.business_name exporter, st.business_address exporter_address, st.business_name producer, c.name importer, c.address importer_address, c.email importer_email from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.customers c on c.id = o.customer_id cross join trade.settings st where sh.id = $1" },
+      { "title": "Goods", "note": "Origin criterion: WO wholly obtained or produced, PE produced entirely from originating materials, PSR meets the product-specific rule.", "sql": "select p.name description, coalesce(substr(p.hs_code, 1, 6), 'MISSING') hs_6_digit, coalesce(oc.criterion, 'NOT DETERMINED') origin_criterion, sh.code || ' / ' || coalesce((select ref_no from trade.documents d where d.shipment_id = sh.id and d.doc_type = 'CI' order by d.created_at desc limit 1), '') invoice_reference from trade.shipments sh join trade.order_lines l on l.order_id = sh.order_id join trade.products p on p.id = l.product_id left join trade.origin_check oc on oc.shipment_id = sh.id and oc.product_id = p.id where sh.id = $1 order by l.created_at, p.code" },
+      { "title": "Certification", "layout": "record", "sql": "select a.name agreement, 'Single shipment ' || sh.code blanket_period, a.declaration statement, current_date date, '' signature from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.agreements a on a.code = o.claim_agreement where sh.id = $1" }
+    ]
+  },
+  {
+    "name": "shipping-advice",
+    "title": "Shipping advice",
+    "for_each": "select sh.id, sh.code || ' ' || c.name as label from trade.shipments sh join trade.orders o on o.id = sh.order_id join trade.customers c on c.id = o.customer_id where sh.status = 'shipped' order by sh.code",
+    "file": "label",
+    "sections": [
+      { "title": "On board", "layout": "record", "sql": "select b.code shipment, b.po_ref your_order, b.customer_name consignee, b.carrier, b.vessel, b.bl_no bill_of_lading, b.container_no container, b.port_load, b.shipped_on, b.port_discharge, b.eta from trade.shipment_board b where b.id = $1" },
+      { "title": "Documents", "sql": "select doc_name document, coalesce(ref_no, '') reference, case when status in ('missing', 'draft') then 'to follow' when status = 'sent' then 'sent ' || sent_on else 'enclosed' end status from trade.shipment_docs where shipment_id = $1 order by doc_type" },
+      { "title": "Payment", "layout": "record", "sql": "select i.code invoice, i.currency, i.amount_cents, i.due_on from trade.invoices i where i.shipment_id = $1" }
     ]
   }
 ]

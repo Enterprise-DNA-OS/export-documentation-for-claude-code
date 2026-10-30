@@ -1,0 +1,4 @@
+Consignee Code,Consignee Name,Country Code,Address,Contact,Email,Phone,Importer Tax Number,Currency,Terms of Delivery,Payment Terms
+PD1001,Hokkaido Fine Foods KK,JP,"2-1 Kita 5 Jonishi, Chuo-ku, Sapporo, Japan",Yuki Sato,yuki@hokkaidofine.example,+81 11 555 0110,JP-T9876543210987,USD,CFR Tokyo,TT 30 days
+PD1002,Orchard Road Grocers Pte Ltd,Singapore,"391 Orchard Road, Singapore 238872",Marcus Lim,marcus@orchardgrocers.example,+65 6555 0120,SG-201955555D,SGD,FCA,TT 14 days
+PD1003,West Coast Seafood Distributors,US,"880 Harbor Blvd, Oakland CA 94607, USA",Ana Lopez,ana@westcoastseafood.example,+1 510 555 0130,US-94-7654321,USD,FOB,TT 45 days

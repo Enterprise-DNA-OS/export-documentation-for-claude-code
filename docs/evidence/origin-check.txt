@@ -1,0 +1,9 @@
+  shipment  agreement  product        hs code  criterion  determined on  valid to  problem                          
+  --------  ---------  -------------  -------  ---------  -------------  --------  ---------------------------------
+  S-2041    CPTPP      GLM-PWD-500                                                 no six-digit tariff code         
+  S-2041    CPTPP      MAN-UMF10-250  040900                                       no origin determination          
+  S-2042    CPTPP      KIWI-PUR-10    200799                                       origin evidence lapsed 2026-09-30
+  S-2040    CPTPP      APL-CHIP-1KG   081330   WO         2026-07-02                                                
+  S-2040    CPTPP      GLM-HS-1KG     030732   WO         2026-04-13                                                
+  S-2041    CPTPP      GLM-HS-1KG     030732   WO         2026-04-13                                                
+  S-2042    CPTPP      APL-CHIP-1KG   081330   WO         2026-07-02                                                

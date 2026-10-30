@@ -2,13 +2,33 @@
   {
     "name": "week",
     "title": "This week",
-    "subtitle": "Export Documentation for Claude Code: what needs attention, rendered by npm run view",
+    "subtitle": "Cut-offs, documents, export entries and the rules, rendered by npm run view",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Cut-offs in the next 14 days", "note": "The export entry is lodged before loading: 48 hours by sea and 9 hours by air unless settings say otherwise.", "sql": "select code, customer, mode, vessel, to_char(cutoff_at, 'YYYY-MM-DD HH24:MI') cutoff, days_to_cutoff days, coalesce(export_entry_no, case when entry_required then 'lodge by ' || to_char(entry_due_at, 'YYYY-MM-DD HH24:MI') else 'not needed' end) export_entry, outstanding from trade.shipment_board where status = 'booked' and days_to_cutoff <= 14 order by cutoff_at" },
+      { "title": "Documents outstanding", "sql": "select d.shipment, b.customer, d.doc_name document, d.issuer, d.status, b.days_to_cutoff days_to_cutoff from trade.shipment_docs d join trade.shipment_board b on b.id = d.shipment_id where d.status in ('missing', 'draft', 'rejected') and b.status in ('booked', 'shipped') and not (b.status = 'booked' and d.doc_type = 'BL') order by b.days_to_cutoff, d.shipment" },
+      { "title": "On the water", "note": "Documents the customer needs to clear the goods, and whether they have them.", "sql": "select code, customer, port_discharge, eta, days_to_eta days, case when not_sent = '' then 'all sent' else not_sent end not_sent from trade.shipment_board where status = 'shipped' order by eta" },
+      { "title": "Rule findings", "note": "Each rule and its source is in docs/compliance.md.", "sql": "select rule, severity, ref, subject, detail from trade.compliance_findings order by severity = 'breach' desc, rule" }
+    ]
+  },
+  {
+    "name": "origin",
+    "title": "Origin and tariff codes",
+    "subtitle": "Every agreement claim, the tariff codes behind it and the evidence on file",
+    "sections": [
+      { "title": "Claims with a problem", "sql": "select shipment, agreement, product, product_name, coalesce(hs_code, '') hs_code, problem from trade.origin_check where problem <> '' order by shipment" },
+      { "title": "Origin evidence on file", "sql": "select p.code, p.name, d.agreement, d.criterion, d.determined_on, d.determined_by, coalesce(d.valid_to::text, 'open') valid_to, case when d.valid_to < current_date then 'LAPSED' else '' end flag from trade.origin_determinations d join trade.products p on p.id = d.product_id order by flag desc, p.code" },
+      { "title": "Tariff codes", "sql": "select code, name, coalesce(hs_code, 'MISSING') hs_code, hs_checked_on from trade.products where active order by hs_code nulls first, hs_checked_on nulls first" }
+    ]
+  },
+  {
+    "name": "money",
+    "title": "Credits and money owed",
+    "subtitle": "Letters of credit, what customers owe, and how each one pays",
+    "sections": [
+      { "title": "Letters of credit", "sql": "select code, lc_number, customer, currency, amount_cents, ceiling_cents, drawn_cents, latest_shipment_on, expiry_on, next_present_by, status from trade.lc_position order by expiry_on" },
+      { "title": "Invoices owing", "sql": "select code, customer_name customer, shipment, currency, owing_cents, owing_base_cents, due_on, days_overdue from trade.invoice_balance where status = 'open' order by days_overdue desc" },
+      { "title": "How each customer pays, last 12 months", "sql": "select code, name, country, payment_terms, paid_invoices, avg_days_late, owing_base_cents from trade.customer_payment order by avg_days_late desc nulls last" },
+      { "title": "Trade lanes, last 12 months", "sql": "select market, shipments, customers, fob_base_cents, net_kg, agreement_claims from trade.lanes order by fob_base_cents desc" }
     ]
   }
 ]

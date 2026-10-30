@@ -1,0 +1,20 @@
+  area     item             why                                                                     next                                                                  
+  -------  ---------------  ----------------------------------------------------------------------  ----------------------------------------------------------------------
+  rules    shipment S-2041  before-loading: Export health certificate (EHC) missing, cut-off in...  apply for it now; the goods cannot load without it                    
+  rules    settings         certifier-details: certifications of origin need the certifier's na...  add the certifier's details in settings                               
+  rules    shipment S-2041  export-entry: no export entry; lodge by 2026-10-29 16:00 (FOB NZD 2...  lodge the export entry, then /enter                                   
+  rules    LC-7002          lc-amount: orders under this credit come to USD 37,340.00, over its...  ask for an amendment or split the order                               
+  rules    shipment S-2043  lc-shipment-date: booked to sail 2026-11-08, after the latest shipm...  ask the buyer to amend the credit before it sails                     
+  rules    shipment S-2042  origin: CPTPP claimed: origin evidence lapsed 2026-09-30                record the tariff code (/hs) or the origin evidence (/origin), or d...
+  rules    shipment S-2041  origin: CPTPP claimed: no origin determination                          record the tariff code (/hs) or the origin evidence (/origin), or d...
+  rules    shipment S-2041  origin: CPTPP claimed: no six-digit tariff code                         record the tariff code (/hs) or the origin evidence (/origin), or d...
+  rules    shipment S-2042  origin-validity: ORIGIN issued 2025-09-25 is valid to 2026-09-25, b...  issue a fresh certification of origin                                 
+  cut-off  S-2044           SHOH cut-off in 1 day; outstanding: BL, COO                             /docs-due                                                             
+  cut-off  S-2041           KANTO cut-off in 1 day; outstanding: BL, EHC                            /docs-due                                                             
+  rules    shipment S-2044  documents: Certificate of origin (chamber) (COO) draft, cut-off in ...  /draft-docs-request                                                   
+  rules    shipment S-2038  documents-to-customer: arrives 2026-11-03 (4 days); not yet sent: B...  /send, then /draft-shipping-advice                                    
+  rules    shipment S-2044  entry-late: entry lodged 2026-10-30 09:00, after the 2026-10-29 10:...  /compliance                                                           
+  rules    LC-7002          lc-expiry: expires 2026-11-07 (8 days) with goods still to ship         /compliance                                                           
+  rules    shipment S-2039  lc-presentation: present documents to the bank by 2026-11-02 (3 days)   present the documents to the bank, then /present                      
+  rules    shipment S-2035  records: shipped 2026-08-30 with no record of: PL                       /compliance                                                           
+  money    TBP-INV-3135     Pacific Gourmet Imports Inc owes USD 91,020.00, 31 days overdue         /draft-overdue                                                        

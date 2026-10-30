@@ -1,24 +1,24 @@
 # Why there is no front end
 
-TradeWindow Prodoc is a database with a subscription. The tables underneath it are ordinary: a few entities, a few relationships, a handful of workflows you repeat every week. What you pay for is the layer on top that lets people who do not write SQL get at those tables. Screens, filters, dashboards, forms.
+TradeWindow Prodoc is a set of document templates over a database of consignees, products and shipments. The records underneath are ordinary: markets, customers, products, orders, shipments, documents, credits and invoices. What you pay for is the layer that lets the export desk fill in templates and see which documents are done.
 
-That layer used to be the whole product, because talking to a database was hard. It is not hard any more. Open this folder in Claude Code, describe what you want, and it writes the query, runs it, and explains the answer. Ask a question the dashboard never had a chart for and you still get an answer.
+That layer was the product because the records were hard to reach. They are not any more. Open this folder in Claude Code, ask what is missing on tomorrow's sailing, and it runs the query and tells you, with the rule behind it.
 
 ## What you gain
 
-- **Better answers.** A dashboard shows what the vendor decided to chart. Here you ask your own question, in your own words, and get it answered against your own data.
-- **No seats.** Everyone who needs to look can look. The bill does not grow with headcount.
-- **Your data in your Postgres.** Plain tables. Back them up, query them from anything, leave any time. There is no export step because there is nothing to leave.
-- **A process that matches you.** When your way of working changes, you add a command. You do not wait for a feature request to clear.
+- **Answers, not status screens.** Ask which claims rest on lapsed origin evidence, which credits have a bank date this week, or which customers pay late. A template screen does not ask those questions for you.
+- **Rules you can read.** Every check is in `docs/compliance.md` with its source, and in one database view you can change.
+- **No seats.** The desk, the warehouse and the accounts team can all look.
+- **Your records in your database.** Plain records you own. Leaving needs no export.
 
-## What you give up
+## What a screen gives that this does not
 
-- **A visual board.** Stages are a table you ask about, not cards you drag.
-- **A phone app.** It runs where Claude Code runs.
-- **A vendor help desk.** This is open source. Enterprise DNA supports the installed version for businesses that want someone to call.
+- **Electronic lodgement and messaging.** Prodoc sends data to customs, ports, carriers, forwarders and banks. This base records numbers and documents; your broker keeps lodging, or Enterprise DNA connects those links into your version.
+- **A template designer.** Layouts here are a file you change by asking. There is no drag-and-drop editor.
+- **A phone app and a shared screen.** It runs where your agent runs. If the warehouse needs a screen to tick off packing, Enterprise DNA builds one into your version.
 
 ## Who this fits
 
-Small teams who already use Claude Code, or who would rather learn to ask than learn another interface. If your team needs a screen to look at all day, keep TradeWindow Prodoc. If you need the answers more than the screens, this is cheaper, faster and yours.
+Exporters whose desk is one to five people, who want the documents right and the deadlines in front of them more than another screen to learn.
 
 Installed and run for you: https://enterprisedna.co/omni/instead-of/tradewindow-prodoc

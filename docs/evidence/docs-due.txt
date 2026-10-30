@@ -1,0 +1,12 @@
+  shipment  customer  doc type  doc name                         issuer     status   why                               days to cutoff  shipment status
+  --------  --------  --------  -------------------------------  ---------  -------  --------------------------------  --------------  ---------------
+  S-2041    KANTO     EHC       Export health certificate        regulator  missing  product                                        1  booked         
+  S-2040    KANTO     EHC       Export health certificate        regulator  missing  product                                        6  booked         
+  S-2043    GULF      EHC       Export health certificate        regulator  missing  letter of credit, product                      7  booked         
+  S-2044    SHOH      COO       Certificate of origin (chamber)  chamber    draft    customer                                       1  booked         
+  S-2042    LION      PL        Packing list                     us         missing  every shipment                                 5  booked         
+  S-2040    KANTO     PL        Packing list                     us         draft    every shipment                                 6  booked         
+  S-2043    GULF      CI        Commercial invoice               us         draft    every shipment, letter of credit               7  booked         
+  S-2043    GULF      COO       Certificate of origin (chamber)  chamber    missing  letter of credit, market                       7  booked         
+  S-2043    GULF      INS       Insurance certificate            insurer    missing  incoterm, letter of credit                     7  booked         
+  S-2043    GULF      PL        Packing list                     us         missing  every shipment, letter of credit               7  booked         
